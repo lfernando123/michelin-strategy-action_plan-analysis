@@ -7,7 +7,7 @@ export async function uploadDocs(strategy, action) {
 
   const res = await fetch(`${API_URL}/upload`, {
     method: "POST",
-    body: formData,
+    body: formData
   });
 
   return res.json();
@@ -17,7 +17,7 @@ export async function askQuestion(question) {
   const res = await fetch(`${API_URL}/ask`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ question }),
+    body: JSON.stringify({ question })
   });
 
   return res.json();

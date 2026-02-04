@@ -5,17 +5,21 @@ export default function UploadDocs() {
   const [strategy, setStrategy] = useState(null);
   const [action, setAction] = useState(null);
 
-  const upload = async () => {
+  const handleUpload = async () => {
+    if (!strategy || !action) {
+      alert("Select both files");
+      return;
+    }
     await uploadDocs(strategy, action);
-    alert("Documents indexed!");
+    alert("Documents uploaded and indexed");
   };
 
   return (
     <div>
-      <h3>Upload Strategy & Action Plans</h3>
+      <h3>Upload Documents</h3>
       <input type="file" onChange={e => setStrategy(e.target.files[0])} />
       <input type="file" onChange={e => setAction(e.target.files[0])} />
-      <button onClick={upload}>Upload</button>
+      <button onClick={handleUpload}>Upload</button>
     </div>
   );
 }

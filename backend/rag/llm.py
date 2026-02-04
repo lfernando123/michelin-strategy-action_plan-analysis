@@ -1,6 +1,6 @@
 import ollama
 
-def call_ollama(prompt, model="llama3"):
+def call_ollama(prompt, model="qwen:1.8b"):
     """
     Calls Ollama LLM with a grounded RAG prompt
     """
