@@ -7,6 +7,8 @@ from rag.vector_store import build_index
 from rag.retriever import retrieve_context
 from rag.prompts import build_prompt
 
+from rag.llm import call_ollama
+
 app = FastAPI(title="Strategy–Action RAG System")
 
 DOCUMENTS = []
@@ -42,6 +44,9 @@ class Question(BaseModel):
 @app.post("/ask")
 def ask(q: Question):
 
+    if INDEX is None:
+        return {"error": "Documents not indexed yet"}
+
     retrieved = retrieve_context(
         query=q.question,
         index=INDEX,
@@ -51,17 +56,16 @@ def ask(q: Question):
     )
 
     context = "\n".join(
-        f"[{d['type'].upper()} | score={d['score']}]\n{d['text']}"
+        f"[{d['type'].upper()} | similarity={d['score']}]\n{d['text']}"
         for d in retrieved
     )
 
     prompt = build_prompt(q.question, context)
 
-    # 🔁 Replace this with OpenAI / local LLM call
-    answer = prompt
+    # 🦙 OLLAMA LLM CALL (THIS IS THE G IN RAG)
+    answer = call_ollama(prompt)
 
     return {
         "answer": answer,
         "evidence": retrieved
     }
-
