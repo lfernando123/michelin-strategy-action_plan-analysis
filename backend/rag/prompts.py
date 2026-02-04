@@ -1,22 +1,23 @@
 def build_prompt(question, context):
     return f"""
-You are a senior corporate strategy consultant.
+You are an AI strategy consultant.
 
-STRICT RULES:
-- Use ONLY the information in the CONTEXT
-- If evidence is insufficient, say "Insufficient information"
-- Do NOT use external knowledge
-- Be concise and executive-ready
+INSTRUCTIONS:
+1. Use ONLY the information in CONTEXT.
+2. Analyze alignment between Strategy and Action Plan.
+3. If you find gaps, propose specific improvements:
+   - New KPIs
+   - Modified timelines
+   - Missing tasks
+4. Format your answer clearly:
+   1. Alignment Summary
+   2. Gaps / Misalignments
+   3. Recommended Improvements (structured)
+   4. Risks
 
 CONTEXT:
 {context}
 
-QUESTION:
+USER QUESTION:
 {question}
-
-FORMAT:
-1. Alignment Assessment
-2. Gaps & Misalignments
-3. Improvement Recommendations
-4. Strategic Risks
 """

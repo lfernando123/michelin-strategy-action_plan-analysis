@@ -9,7 +9,17 @@ from rag.prompts import build_prompt
 
 from rag.llm import call_ollama
 
+from fastapi.middleware.cors import CORSMiddleware
+
 app = FastAPI(title="Strategy–Action RAG System")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],       # allow React frontend
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 DOCUMENTS = []
 INDEX = None
