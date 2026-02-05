@@ -1,25 +1,28 @@
-import { useState } from "react";
 import { uploadDocs } from "../api";
 
 export default function UploadDocs() {
-  const [strategy, setStrategy] = useState(null);
-  const [action, setAction] = useState(null);
+  let strategy, action;
 
-  const handleUpload = async () => {
+  const upload = async () => {
     if (!strategy || !action) {
-      alert("Select both files");
+      alert("Upload both documents");
       return;
     }
     await uploadDocs(strategy, action);
-    alert("Documents uploaded and indexed");
+    alert("Documents indexed successfully");
   };
 
   return (
-    <div>
-      <h3>Upload Documents</h3>
-      <input type="file" onChange={e => setStrategy(e.target.files[0])} />
-      <input type="file" onChange={e => setAction(e.target.files[0])} />
-      <button onClick={handleUpload}>Upload</button>
-    </div>
+    <>
+      <label>Strategy Document</label>
+      <input type="file" onChange={e => strategy = e.target.files[0]} />
+
+      <label style={{ marginTop: "50px" }}>Action Plan</label>
+      <input type="file" onChange={e => action = e.target.files[0]} />
+
+      <button style={{ marginTop: "50px", width: "100%" }} onClick={upload}>
+        Upload & Index
+      </button>
+    </>
   );
 }
