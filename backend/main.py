@@ -11,6 +11,8 @@ from rag.llm import call_ollama
 
 from fastapi.middleware.cors import CORSMiddleware
 
+import json
+
 app = FastAPI(title="Strategy–Action RAG System")
 
 app.add_middleware(
@@ -52,13 +54,12 @@ class Question(BaseModel):
 
 
 @app.post("/ask")
-def ask(q: Question):
+async def ask_question(request: dict):
+    question = request["question"]
 
-    if INDEX is None:
-        return {"error": "Documents not indexed yet"}
-
+    # 🔎 Use your existing retrieval function
     retrieved = retrieve_context(
-        query=q.question,
+        query=question,
         index=INDEX,
         documents=DOCUMENTS,
         model=MODEL,
@@ -66,16 +67,22 @@ def ask(q: Question):
     )
 
     context = "\n".join(
-        f"[{d['type'].upper()} | similarity={d['score']}]\n{d['text']}"
+        f"[{d['type'].upper()} | score={d['score']}]\n{d['text']}"
         for d in retrieved
     )
 
-    prompt = build_prompt(q.question, context)
+    prompt = build_prompt(question, context)
 
-    # 🦙 OLLAMA LLM CALL (THIS IS THE G IN RAG)
-    answer = call_ollama(prompt)
+    response = call_ollama(prompt)
 
-    return {
-        "answer": answer,
-        "evidence": retrieved
-    }
+    try:
+        parsed = json.loads(response)
+    except:
+        parsed = {
+            "alignment_score": 50,
+            "summary": response,
+            "gaps": "",
+            "recommendations": ""
+        }
+
+    return parsed

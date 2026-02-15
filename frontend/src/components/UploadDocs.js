@@ -14,7 +14,7 @@ export default function UploadDocs() {
 
   return (
     <>
-      <label>Strategy Document</label>
+      <label style={{ marginBottom: "50px", marginTop: "50px"}}>Strategy Document</label>
       <input type="file" onChange={e => strategy = e.target.files[0]} />
 
       <label style={{ marginTop: "50px" }}>Action Plan</label>
