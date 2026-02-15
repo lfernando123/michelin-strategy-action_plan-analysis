@@ -53,11 +53,12 @@ class Question(BaseModel):
     question: str
 
 
+import json
+
 @app.post("/ask")
 async def ask_question(request: dict):
     question = request["question"]
 
-    # 🔎 Use your existing retrieval function
     retrieved = retrieve_context(
         query=question,
         index=INDEX,
@@ -71,18 +72,26 @@ async def ask_question(request: dict):
         for d in retrieved
     )
 
-    prompt = build_prompt(question, context)
+    # REAL alignment score
+    if retrieved:
+        avg_score = sum(d["score"] for d in retrieved) / len(retrieved)
+        alignment_score = round(avg_score * 100, 2)
+    else:
+        alignment_score = 0
 
+    prompt = build_prompt(question, context)
     response = call_ollama(prompt)
 
     try:
         parsed = json.loads(response)
-    except:
+        parsed["alignment_score"] = alignment_score  # overwrite with real score
+    except json.JSONDecodeError:
         parsed = {
-            "alignment_score": 50,
+            "alignment_score": alignment_score,
             "summary": response,
             "gaps": "",
             "recommendations": ""
         }
 
     return parsed
+

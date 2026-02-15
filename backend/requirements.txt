@@ -1,7 +1,7 @@
 fastapi
 uvicorn
-python-docx
-sentence-transformers
 faiss-cpu
 numpy
 pydantic
+requests
+python-multipart
